@@ -1,3 +1,5 @@
+import { Toaster } from "@/components/ui/toaster";
+
 export default function AuthLayout({
   children,
 }: {
@@ -5,8 +7,9 @@ export default function AuthLayout({
   params: { locale: string };
 }) {
   return (
-    <div className=" h-full flex flex-col items-center">
-      <div className="h-full w-full mx-auto md:h-auto md:w-[420px]">{children}</div>
+    <div className="h-screen w-full flex flex-col items-center">
+      <div className="h-screen w-full flex items-center justify-center">{children}</div>
+      <Toaster />
     </div>
   );
 }

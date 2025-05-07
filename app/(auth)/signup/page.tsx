@@ -5,7 +5,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -15,12 +14,24 @@ import { useState } from "react";
 import Image from "next/image";
 import { Loader2, X } from "lucide-react";
 import { signUp } from "@/lib/auth-client";
-import { toast } from "sonner";
+import { useToast } from "@/hooks/use-toast"
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { z } from "zod";
+
+// 定义表单验证schema
+const signUpSchema = z.object({
+  name: z.string().min(1, "名字不能为空"),
+  email: z.string().email("请输入有效的邮箱地址"),
+  password: z.string().min(6, "密码至少需要6个字符"),
+  passwordConfirmation: z.string().min(6, "确认密码至少需要6个字符"),
+}).refine((data) => data.password === data.passwordConfirmation, {
+  message: "两次输入的密码不一致",
+  path: ["passwordConfirmation"],
+});
 
 export default function SignUp() {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
@@ -28,6 +39,7 @@ export default function SignUp() {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const { toast } = useToast()
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -41,8 +53,53 @@ export default function SignUp() {
     }
   };
 
+  const handleSignUp = async () => {
+    try {
+      // 验证表单数据
+      const validatedData = signUpSchema.parse({
+        name,
+        email,
+        password,
+        passwordConfirmation,
+      });
+
+      await signUp.email({
+        email: validatedData.email,
+        password: validatedData.password,
+        name: validatedData.name,
+        image: image ? await convertImageToBase64(image) : "",
+        callbackURL: "/signin",
+        fetchOptions: {
+          onResponse: () => {
+            setLoading(false);
+          },
+          onRequest: () => {
+            setLoading(true);
+          },
+          onError: (ctx) => {
+            toast({
+              variant: 'destructive',
+              description: ctx.error.message,
+            })
+          },
+          onSuccess: async () => {
+            router.push("/signin");
+          },
+        },
+      });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        // 显示第一个验证错误
+        toast({
+          variant: 'destructive',
+          description: error.errors[0].message,
+        });
+      }
+    }
+  };
+
   return (
-    <Card className="z-50 rounded-md rounded-t-none max-w-md">
+    <Card className="z-50 rounded-md rounded-t-none w-[450px]">
       <CardHeader>
         <CardTitle className="text-lg md:text-xl">注册</CardTitle>
         <CardDescription className="text-xs md:text-sm">
@@ -51,31 +108,17 @@ export default function SignUp() {
       </CardHeader>
       <CardContent>
         <div className="grid gap-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="first-name">名字</Label>
+          <div className="grid  gap-2">
+          <Label htmlFor="name">名字</Label>
               <Input
-                id="first-name"
+                id="name"
                 placeholder="小明"
                 required
                 onChange={(e) => {
-                  setFirstName(e.target.value);
+                  setName(e.target.value);
                 }}
-                value={firstName}
+                value={name}
               />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="last-name">姓氏</Label>
-              <Input
-                id="last-name"
-                placeholder="张"
-                required
-                onChange={(e) => {
-                  setLastName(e.target.value);
-                }}
-                value={lastName}
-              />
-            </div>
           </div>
           <div className="grid gap-2">
             <Label htmlFor="email">邮箱</Label>
@@ -145,33 +188,17 @@ export default function SignUp() {
               </div>
             </div>
           </div>
+          <div className="text-center text-sm">
+            已经有账号？{" "}
+            <Link className="underline underline-offset-4" href="/signin">
+            登录
+            </Link>
+          </div>
           <Button
             type="submit"
             className="w-full"
             disabled={loading}
-            onClick={async () => {
-              await signUp.email({
-                email,
-                password,
-                name: `${firstName} ${lastName}`,
-                image: image ? await convertImageToBase64(image) : "",
-                callbackURL: "/dashboard",
-                fetchOptions: {
-                  onResponse: () => {
-                    setLoading(false);
-                  },
-                  onRequest: () => {
-                    setLoading(true);
-                  },
-                  onError: (ctx) => {
-                    toast.error(ctx.error.message);
-                  },
-                  onSuccess: async () => {
-                    router.push("/dashboard");
-                  },
-                },
-              });
-            }}
+            onClick={handleSignUp}
           >
             {loading ? (
               <Loader2 size={16} className="animate-spin" />
@@ -181,13 +208,6 @@ export default function SignUp() {
           </Button>
         </div>
       </CardContent>
-      <CardFooter>
-        <div className="flex justify-center w-full border-t py-4">
-          <p className="text-center text-xs text-neutral-500">
-            由 <span className="text-orange-400">better-auth</span> 提供安全保障
-          </p>
-        </div>
-      </CardFooter>
     </Card>
   );
 }

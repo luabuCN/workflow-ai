@@ -7,11 +7,9 @@ import {
   CardHeader,
   CardTitle,
   CardDescription,
-  CardFooter,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
 import { Loader2, Key } from "lucide-react";
 import { signIn } from "@/lib/auth-client";
@@ -23,8 +21,47 @@ export default function SignIn() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // 邮箱密码登录
+  const handleEmailSignIn = async () => {
+    await signIn.email(
+      {
+        email,
+        password,
+        callbackURL: "/",
+      },
+      {
+        onRequest: (ctx) => {
+          setLoading(true);
+        },
+        onResponse: (ctx) => {
+          console.log(ctx,'ctx');
+          setLoading(false);
+        },
+      }
+    );
+  };
+
+  // 社交账号登录
+  const handleSocialSignIn = async (provider: "google" | "github") => {
+    await signIn.social(
+      {
+        provider,
+        callbackURL: "/",
+      },
+      {
+        onRequest: (ctx) => {
+          setLoading(true);
+        },
+        onResponse: (ctx) => {
+          console.log(ctx,'ctx');
+          setLoading(false);
+        },
+      }
+    );
+  };
+
   return (
-    <Card className="max-w-md">
+    <Card className="w-[450px]">
       <CardHeader>
         <CardTitle className="text-lg md:text-xl">登录</CardTitle>
         <CardDescription className="text-xs md:text-sm">
@@ -61,27 +98,17 @@ export default function SignIn() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-
+          <div className="text-center text-sm">
+            还没有账号？{" "}
+            <Link className="underline underline-offset-4" href="/signup">
+              注册
+            </Link>
+          </div>
           <Button
             type="submit"
             className="w-full"
             disabled={loading}
-            onClick={async () => {
-              await signIn.email(
-                {
-                  email,
-                  password,
-                },
-                {
-                  onRequest: (ctx) => {
-                    setLoading(true);
-                  },
-                  onResponse: (ctx) => {
-                    setLoading(false);
-                  },
-                }
-              );
-            }}
+            onClick={handleEmailSignIn}
           >
             {loading ? (
               <Loader2 size={16} className="animate-spin" />
@@ -100,22 +127,7 @@ export default function SignIn() {
               variant="outline"
               className={cn("w-full gap-2")}
               disabled={loading}
-              onClick={async () => {
-                await signIn.social(
-                  {
-                    provider: "google",
-                    callbackURL: "/dashboard",
-                  },
-                  {
-                    onRequest: (ctx) => {
-                      setLoading(true);
-                    },
-                    onResponse: (ctx) => {
-                      setLoading(false);
-                    },
-                  }
-                );
-              }}
+              onClick={() => handleSocialSignIn("google")}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -146,22 +158,7 @@ export default function SignIn() {
               variant="outline"
               className={cn("w-full gap-2")}
               disabled={loading}
-              onClick={async () => {
-                await signIn.social(
-                  {
-                    provider: "github",
-                    callbackURL: "/dashboard",
-                  },
-                  {
-                    onRequest: (ctx) => {
-                      setLoading(true);
-                    },
-                    onResponse: (ctx) => {
-                      setLoading(false);
-                    },
-                  }
-                );
-              }}
+              onClick={() => handleSocialSignIn("github")}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
