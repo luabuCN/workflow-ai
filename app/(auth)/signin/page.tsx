@@ -27,14 +27,14 @@ export default function SignIn() {
       {
         email,
         password,
-        callbackURL: "/",
+        callbackURL: "/dashboard",
       },
       {
         onRequest: (ctx) => {
           setLoading(true);
         },
         onResponse: (ctx) => {
-          console.log(ctx,'ctx');
+          console.log(ctx, "ctx");
           setLoading(false);
         },
       }
@@ -46,14 +46,14 @@ export default function SignIn() {
     await signIn.social(
       {
         provider,
-        callbackURL: "/",
+        callbackURL: "/dashboard",
       },
       {
         onRequest: (ctx) => {
           setLoading(true);
         },
         onResponse: (ctx) => {
-          console.log(ctx,'ctx');
+          console.log(ctx, "ctx");
           setLoading(false);
         },
       }

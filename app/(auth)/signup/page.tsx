@@ -14,21 +14,23 @@ import { useState } from "react";
 import Image from "next/image";
 import { Loader2, X } from "lucide-react";
 import { signUp } from "@/lib/auth-client";
-import { useToast } from "@/hooks/use-toast"
+import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { z } from "zod";
 
 // 定义表单验证schema
-const signUpSchema = z.object({
-  name: z.string().min(1, "名字不能为空"),
-  email: z.string().email("请输入有效的邮箱地址"),
-  password: z.string().min(6, "密码至少需要6个字符"),
-  passwordConfirmation: z.string().min(6, "确认密码至少需要6个字符"),
-}).refine((data) => data.password === data.passwordConfirmation, {
-  message: "两次输入的密码不一致",
-  path: ["passwordConfirmation"],
-});
+const signUpSchema = z
+  .object({
+    name: z.string().min(1, "名字不能为空"),
+    email: z.string().email("请输入有效的邮箱地址"),
+    password: z.string().min(6, "密码至少需要6个字符"),
+    passwordConfirmation: z.string().min(6, "确认密码至少需要6个字符"),
+  })
+  .refine((data) => data.password === data.passwordConfirmation, {
+    message: "两次输入的密码不一致",
+    path: ["passwordConfirmation"],
+  });
 
 export default function SignUp() {
   const [name, setName] = useState("");
@@ -39,7 +41,7 @@ export default function SignUp() {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const { toast } = useToast()
+  const { toast } = useToast();
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -78,9 +80,9 @@ export default function SignUp() {
           },
           onError: (ctx) => {
             toast({
-              variant: 'destructive',
+              variant: "destructive",
               description: ctx.error.message,
-            })
+            });
           },
           onSuccess: async () => {
             router.push("/signin");
@@ -91,7 +93,7 @@ export default function SignUp() {
       if (error instanceof z.ZodError) {
         // 显示第一个验证错误
         toast({
-          variant: 'destructive',
+          variant: "destructive",
           description: error.errors[0].message,
         });
       }
@@ -109,16 +111,16 @@ export default function SignUp() {
       <CardContent>
         <div className="grid gap-4">
           <div className="grid  gap-2">
-          <Label htmlFor="name">名字</Label>
-              <Input
-                id="name"
-                placeholder="小明"
-                required
-                onChange={(e) => {
-                  setName(e.target.value);
-                }}
-                value={name}
-              />
+            <Label htmlFor="name">名字</Label>
+            <Input
+              id="name"
+              placeholder="小明"
+              required
+              onChange={(e) => {
+                setName(e.target.value);
+              }}
+              value={name}
+            />
           </div>
           <div className="grid gap-2">
             <Label htmlFor="email">邮箱</Label>
@@ -191,7 +193,7 @@ export default function SignUp() {
           <div className="text-center text-sm">
             已经有账号？{" "}
             <Link className="underline underline-offset-4" href="/signin">
-            登录
+              登录
             </Link>
           </div>
           <Button
