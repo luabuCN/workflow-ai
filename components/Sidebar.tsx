@@ -14,7 +14,7 @@ import Logo from "./Logo";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 const routes = [
   {
-    href: "",
+    href: "dashboard",
     label: "首页",
     icon: HomeIcon,
   },
@@ -44,10 +44,10 @@ export function DesktopSidebar() {
 
   return (
     <div className="hidden relative md:block min-w-[280px] max-w-[280px] h-screen overflow-hidden w-full bg-primary/5 dark:bg-secondary/30 dark:text-foreground text-muted-foreground border-r-2 border-separate">
-      <div className="flex-items-center justify-center gap-2 border-b-[1px] border-separate p-4">
+      <div className="flex-items-center justify-center gap-2 border-b-[1px] border-separate p-2 h-[60px]">
         <Logo />
       </div>
-      <div className="flex flex-col p-2">
+      <div className="flex flex-col p-2 gap-1">
         {routes.map((route) => (
           <Link
             key={route.href}

@@ -12,10 +12,12 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useSession, signOut } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 function AvatarDrop() {
   const { data } = useSession();
   const user = data?.user;
+  const router = useRouter();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -39,7 +41,19 @@ function AvatarDrop() {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => signOut()}>退出登录</DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={async () =>
+            await signOut({
+              fetchOptions: {
+                onSuccess: () => {
+                  router.push("/");
+                },
+              },
+            })
+          }
+        >
+          退出登录
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
