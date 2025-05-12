@@ -4,6 +4,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { waitFor } from "@/lib/helper/waitFor";
 import { AlertCircle, InboxIcon, Workflow } from "lucide-react";
 import React, { Suspense } from "react";
+import CreateWorkflowDialog from "./_components/create-workflow-dialog";
 
 function page() {
   return (
@@ -66,6 +67,7 @@ async function UserWorkflows() {
             点击下方按钮创建你的第一个工作流程
           </p>
         </div>
+        <CreateWorkflowDialog triggerText="创建第一个工作流程" />
       </div>
     );
   }
