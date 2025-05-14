@@ -2,9 +2,11 @@
 
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
+import { revalidatePath } from "next/cache";
+
 import { headers } from "next/headers";
 
-export async function GetWorkflowsForUser() {
+export async function DeleteWorkflow(id: string) {
   //获取Better Auth  登录后的用户信息id
   const session = await auth.api.getSession({
     headers: headers(),
@@ -13,15 +15,11 @@ export async function GetWorkflowsForUser() {
   if (!session) {
     throw new Error("未登录");
   }
-  // 查询用户并返回其工作流数组
-  const user = await prisma.user.findUnique({
+  await prisma.workflow.delete({
     where: {
-      id: session.user.id,
-    },
-    include: {
-      workflows: true,
+      id,
+      userId: session.user.id,
     },
   });
-
-  return user?.workflows || [];
+  revalidatePath("/workflows");
 }

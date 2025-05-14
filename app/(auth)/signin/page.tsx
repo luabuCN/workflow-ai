@@ -34,7 +34,6 @@ export default function SignIn() {
           setLoading(true);
         },
         onResponse: (ctx) => {
-          console.log(ctx, "ctx");
           setLoading(false);
         },
       }

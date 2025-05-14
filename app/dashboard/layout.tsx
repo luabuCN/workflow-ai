@@ -4,6 +4,7 @@ import { DesktopSidebar } from "@/components/Sidebar";
 import { ModeToggle } from "@/components/ThemeModelToggle";
 import { Separator } from "@/components/ui/separator";
 import React from "react";
+import { Toaster } from "@/components/ui/sonner";
 
 function layout({ children }: { children: React.ReactNode }) {
   return (
@@ -24,6 +25,7 @@ function layout({ children }: { children: React.ReactNode }) {
           </div>
         </div>
       </div>
+      <Toaster />
     </div>
   );
 }

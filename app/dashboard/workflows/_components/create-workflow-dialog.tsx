@@ -44,6 +44,7 @@ export default function CreateWorkflowDialog({
     onSuccess: () => {
       toast.success("工作流创建成功", {
         id: "create-workflow",
+        duration: 2000,
       });
     },
     onError: () => {
