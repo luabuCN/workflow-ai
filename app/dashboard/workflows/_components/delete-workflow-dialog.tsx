@@ -36,13 +36,26 @@ function DeleteWorkflowDialog({
     onSuccess: () => {
       toast.success("工作流删除成功", { id: workflowId, duration: 2000 });
       setConfirmText("");
+      setOpen(false); // 仅在成功时关闭对话框
     },
     onError: () => {
       toast.error("出错了！", { id: workflowId });
     },
   });
+
   return (
-    <AlertDialog open={open} onOpenChange={setOpen}>
+    <AlertDialog
+      open={open}
+      onOpenChange={(newOpenState) => {
+        if (deleteMutation.isPending && !newOpenState) {
+          return;
+        }
+        setOpen(newOpenState);
+        if (!newOpenState) {
+          setConfirmText("");
+        }
+      }}
+    >
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>你确定要这样做吗？</AlertDialogTitle>
@@ -62,13 +75,18 @@ function DeleteWorkflowDialog({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={() => setConfirmText("")}>
+          <AlertDialogCancel onClick={() => {
+            if (!deleteMutation.isPending) {
+              setConfirmText("");
+            }
+          }}>
             取消
           </AlertDialogCancel>
           <AlertDialogAction
             disabled={confirmText !== workflowName || deleteMutation.isPending}
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            onClick={() => {
+            onClick={(e) => { 
+              e.preventDefault(); 
               toast.loading("正在删除工作流...", { id: workflowId });
               deleteMutation.mutate(workflowId);
             }}
