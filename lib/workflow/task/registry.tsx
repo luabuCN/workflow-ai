@@ -1,5 +1,6 @@
 import { LaunchBrowserTask } from "@/lib/workflow/task/LaunchBrowser";
 import { TaskType } from "@/types/task";
+
 export const TaskRegistry = {
-  [TaskType.LAUNCH_BROWSER]: LaunchBrowserTask,
+  LAUNCH_BROWSER: LaunchBrowserTask,
 };

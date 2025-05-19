@@ -18,6 +18,7 @@ import NodeComponent from "./node/NodeComponent";
 const nodeTypes = {
   FlowScrapNode: NodeComponent,
 };
+const fitViewOptions = { padding: 1 };
 
 function FlowEditor({ workflow }: { workflow: Workflow }) {
   const [nodes, setNodes, onNodesChange] = useNodesState([
@@ -32,8 +33,11 @@ function FlowEditor({ workflow }: { workflow: Workflow }) {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         nodeTypes={nodeTypes}
+        maxZoom={1.5}
+        fitViewOptions={fitViewOptions}
+        fitView
       >
-        <Controls position="top-left" />
+        <Controls position="top-left" fitViewOptions={fitViewOptions} />
         <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
       </ReactFlow>
     </main>
