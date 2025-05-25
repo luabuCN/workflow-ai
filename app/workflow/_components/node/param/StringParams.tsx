@@ -14,6 +14,7 @@ export default function StringParam({
   updateNodeParamValue,
 }: ParamProps) {
   const id = useId();
+  const [internalValue, setInternalValue] = useState(value);
   return (
     <div className="space-y-1 p-1 w-full">
       <Label htmlFor={id} className="text-xs flex">
@@ -22,9 +23,11 @@ export default function StringParam({
       </Label>
       <Input
         id={id}
-        value={value}
-        onChange={(e) => updateNodeParamValue(e.target.value)}
+        className="text-xs"
+        value={internalValue}
+        onChange={(e) => setInternalValue(e.target.value)}
         placeholder="请在此输入"
+        onBlur={(e) => updateNodeParamValue(e.target.value)}
       />
       {param.helperText && (
         <p className="text-muted-foreground px-2">{param.helperText}</p>

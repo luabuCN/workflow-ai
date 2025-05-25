@@ -2,6 +2,7 @@ import Logo from "@/components/Logo";
 import { ModeToggle } from "@/components/ThemeModelToggle";
 import { Separator } from "@/components/ui/separator";
 import React from "react";
+import { Toaster } from "@/components/ui/sonner";
 
 function layout({ children }: { children: React.ReactNode }) {
   return (
@@ -12,6 +13,7 @@ function layout({ children }: { children: React.ReactNode }) {
         <Logo iconSize={16} fontSize="text-xl" />
         <ModeToggle />
       </footer>
+      <Toaster />
     </div>
   );
 }
