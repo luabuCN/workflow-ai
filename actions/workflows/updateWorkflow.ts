@@ -3,7 +3,9 @@
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { WorkflowStatus } from "@/types/workflow";
+import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
 export async function UpdateWorkflow({
   id,
@@ -40,4 +42,5 @@ export async function UpdateWorkflow({
       definition,
     },
   });
+  revalidatePath(`/workflow/editor/${id}`);
 }

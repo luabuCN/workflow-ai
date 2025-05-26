@@ -20,6 +20,7 @@ function page() {
             管理你的工作流程，创建自动化任务，提高工作效率。通过简单的配置，让AI为你完成重复性工作。
           </p>
         </div>
+        <CreateWorkflowDialog />
       </div>
 
       <div className="h-full py-6">
