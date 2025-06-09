@@ -15,4 +15,14 @@ export const PageToHtml = {
       required: true,
     },
   ],
+  outputs: [
+    {
+      name: "网页HTML",
+      type: TaskParamType.STRING,
+    },
+    {
+      name: "网页实例",
+      type: TaskParamType.BROWSER_INSTANCE,
+    },
+  ] as const,
 };
