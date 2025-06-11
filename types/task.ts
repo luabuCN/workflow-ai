@@ -3,8 +3,8 @@ export enum TaskType {
   LAUNCH_BROWSER = "LAUNCH_BROWSER",
   // 将页面转换为HTML
   PAGE_TO_HTML = "PAGE_TO_HTML",
-  // // 从元素中提取文本
-  // EXTRACT_TEXT_FROM_ELEMENT = "EXTRACT_TEXT_FROM_ELEMENT",
+  // 从元素中提取文本
+  EXTRACT_TEXT_FROM_ELEMENT = "EXTRACT_TEXT_FROM_ELEMENT",
   // // 填充输入框
   // FILL_INPUT = "FILL_INPUT",
   // // 点击元素
